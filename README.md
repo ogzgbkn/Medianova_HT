@@ -22,7 +22,7 @@ Blackjack game made with PHP for the company Medianova.
   - **setRound**: This function gives 2 cards each to both hands at the start of the round. It also determines the hand values and automatically completes the dealer's hand if the player's first hand is a blackjack.
   - **decodeValue**: Decodes the card numbers 1 to 13 to card values (1 to 10 are themselves. 11, 12 and 13 (Jack, Queen and King) are decoded as 10 (Their values are 10)).
   - **decodeName**: Decodes the card numbers 1 to 13 to card names.
-  - **contDealerHand**: When the player's hand is finishedi this function aims to take cards into the dealer's hand until the dealer's hand gets bigger than 17. Later on, it decides which player is the winner.
+  - **contDealerHand**: When the player's hand is finished, this function aims to take cards into the dealer's hand until the dealer's hand gets bigger than 17. Later on, it decides which player is the winner.
   - **playerStay**: This function runs when the stay button is pressed by the user. It saves the player's hand status as **"S"** and saves the player's hand value.
   - **playerHit**: This function runs when the hit button is pressed by the user. It adds a card to the player's hand and updates the player's hand status.
   - **printWinner**: This function prints the winner hand.
