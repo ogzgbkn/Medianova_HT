@@ -213,79 +213,79 @@
         
         function playerHandCheck(){                                                             // A function to check player's current hand and determine its status
 
-            if($this->playerHandStatus == "IP"){
+            if($this->playerHandStatus == "IP"){                                                // If the player hand is In Progress
 
-                $haveAce = false;
-                $sumWithoutAces = 0;
-                $aceIndices = array();                                                                   
+                $haveAce = false;                                                               // A variable to hold whether the hand has ace(s)
+                $sumWithoutAces = 0;                                                            // A variable to hold sum without aces
+                $aceIndices = array();                                                          // A variable to hold ace indices                                                            
                 
-                for($i = 0; $i < count($this->playerHand); $i++){
+                for($i = 0; $i < count($this->playerHand); $i++){                               // Iterating through player hand
 
-                    if(($this->playerHand[$i] % 100) == 1){
+                    if(($this->playerHand[$i] % 100) == 1){                                     // If the particular card is an ace
 
-                        $haveAce = true;
-                        array_push($aceIndices, $i);
-                        continue;
+                        $haveAce = true;                                                        // Marking that the hand has at least one ace
+                        array_push($aceIndices, $i);                                            // Saving the index of the ace
+                        continue;                                                               // Continue with other cards in the hand
                     }
 
-                    $sumWithoutAces += $this->decodeValue($this->playerHand[$i] % 100);
+                    $sumWithoutAces += $this->decodeValue($this->playerHand[$i] % 100);         // If the particular card is not an ace, adding its value to sum without aces
                 }
 
                 if($haveAce == false){                                                          // If the deck has no ace, determine hand status using $sumWithoutAces
 
-                    if($sumWithoutAces < 21){
+                    if($sumWithoutAces < 21){                                                   // If the sum without aces is smaller than 21
 
-                        return "IP";
+                        return "IP";                                                            // The hand is In Progress
                     }
 
-                    else if($sumWithoutAces == 21){
+                    else if($sumWithoutAces == 21){                                             // If the sum without aces is 21     
 
-                        $this->playerHandValue = 21;
-                        return "BL";
+                        $this->playerHandValue = 21;                                            // Saving the hand value
+                        return "BL";                                                            // The hand is a Blackjack
                     }
 
-                    else{
+                    else{                                                                       // If the sum without aces is bigger than 21
 
-                        $this->playerHandValue = $sumWithoutAces;
-                        return "BU";
+                        $this->playerHandValue = $sumWithoutAces;                               // Saving the hand value
+                        return "BU";                                                            // The hand is a Busted
                     }
                 }
 
-                else{
+                else{                                                                           // If the hand has ace(s)
 
-                    $firstCaseVal = 11 + (count($aceIndices) - 1);
-                    $secondCaseVal = count($aceIndices);
+                    $firstCaseVal = 11 + (count($aceIndices) - 1);                              // First case is one ace being 11, rest being 1
+                    $secondCaseVal = count($aceIndices);                                        // Second case is all aces being 1
                     $firstCaseSum = $sumWithoutAces + $firstCaseVal;
                     $secondCaseSum = $sumWithoutAces + $secondCaseVal;
 
-                    if($firstCaseSum < 21){
+                    if($firstCaseSum < 21){                                                     // If the first case is smaller than 21
 
-                        return "IP";
+                        return "IP";                                                            // The hand is In Progress
                     }
 
-                    else if($firstCaseSum == 21){
+                    else if($firstCaseSum == 21){                                               // If the first case is 21
 
-                        $this->playerHandValue = 21;
-                        return "BL"; 
+                        $this->playerHandValue = 21;                                            // Saving the hand value
+                        return "BL";                                                            // The hand is a Blackjack
                     }
 
-                    else{
+                    else{                                                                       // If the first case is bigger than 21
 
-                        if($secondCaseSum < 21){
+                        if($secondCaseSum < 21){                                                // If the second case is smaller than 21
 
-                            return "IP";
+                            return "IP";                                                        // The hand is In Progress
                         }
 
-                        else if($secondCaseSum == 21){
+                        else if($secondCaseSum == 21){                                          // If the second case is 21
 
-                            $this->playerHandValue = 21;
-                            return "BL";
+                            $this->playerHandValue = 21;                                        // Saving the hand value
+                            return "BL";                                                        // The hand is a Blackjack
                         }
 
-                        else{
+                        else{                                                                   // If the second case is bigger than 21
 
-                            $this->playerHandValue = 21;
-                            return "BU";
+                            $this->playerHandValue = 21;                                        // Saving the hand value
+                            return "BU";                                                        // The hand is a Busted
                         }
                     }
                 }
