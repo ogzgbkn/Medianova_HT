@@ -29,7 +29,7 @@ Blackjack game made with PHP for the company Medianova.
   - **printHands**: This function prints both hands and also buttons.
 
 ## Possible Improvements
-* The hit button works fast but after the player's hand is completed, the system responds quite slowly for completing the dealer's hand and determining the winner. **An optimization is required.**.
+* The hit button works fast but after the player's hand is completed, the system responds quite slowly for completing the dealer's hand and determining the winner. **An optimization is required.**
 * Front end design is poor. echo function prints results cumulatively. **Efficient ways of using PHP with HTML should be studied.**
 * PHP's sleep() function is not working. **Delay between the rounds is not working.**
 * No debugger is used and unit/integration tests applied. **Error handling can be improved.**
