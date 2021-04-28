@@ -13,7 +13,7 @@ Blackjack game made with PHP for the company Medianova.
   - **$dealerHandValue**: A variable to hold the dealer's hand's sum.
   - **$dealerHandStatus**: A variable to hold the dealer's hand's status (In Progress: **"IP"**, Stay: **"S"**, Blackjack: **"BL"**, Busted: **"BU"**).
   
-* Class (gameRunner) Methods
+* <ins>**Class (gameRunner) Methods**</ins>
   - **__construct**: Initializes the player hands and all 6 decks.
   - **decodeCard**: Cards are hold as 3 digit numbers in arrays (Ex: 301 is ace of Hearts, 201 is ace of Diamonds). This function decodes this info and returns it in a cardInfo class.
   - **takeCard**: This function randomly takes a card from all 6 decks (312 cards).
