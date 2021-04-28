@@ -308,15 +308,15 @@
             array_push($this->dealerHand, $this->takeCard());
             array_push($this->playerHand, $this->takeCard());
 
-            $this->playerHandStatus = $this->playerHandCheck();
+            $this->playerHandStatus = $this->playerHandCheck();                                 // Setting the first hand statuses of both hands
             $this->dealerHandStatus = $this->dealerHandCheck();
 
-            $this->printHands(0);
+            $this->printHands(0);                                                               // Printing the hands with buttons
 
-            if($this->playerHandStatus == "BL") $this->contDealerHand();
+            if($this->playerHandStatus == "BL") $this->contDealerHand();                        // If the player's first hand status is Blackjack, proceed with completing dealer's hand
         }
 
-        function decodeValue(int $cardNum){
+        function decodeValue(int $cardNum){                                                     // A function to decode the value of the card num (cardNum < 11, val = cardNum; cardNum = 11-12-13, val = 10)
 
             $cardVal = $cardNum % 100;
 
@@ -350,142 +350,142 @@
             }
         }
 
-        function contDealerHand(){
+        function contDealerHand(){                                                              // A function to continue generating dealer's hand when player's hand is completed
 
             if($this->dealerHandStatus == "IP"){
 
-                while(true){
+                while(true){                                                                    // At the end of the loop, dealer's hand will be completed
 
-                    $takenCard =  $this->takeCard();
-                    array_push($this->dealerHand, $takenCard);
+                    $takenCard =  $this->takeCard();                                            // Taking a card from all 6 decks
+                    array_push($this->dealerHand, $takenCard);                                  // Adding the card to the dealer's hand
 
-                    $this->dealerHandStatus = $this->dealerHandCheck();
+                    $this->dealerHandStatus = $this->dealerHandCheck();                         // Checking the dealer's hand's status
 
-                    $this->printHands(1);
+                    $this->printHands(1);                                                       // Printing hands
 
-                    if($this->dealerHandStatus != "IP"){
+                    if($this->dealerHandStatus != "IP"){                                        // If the dealer's hand is NOT In Progress
 
-                        break;
+                        break;                                                                  // Break 
                     }
                 }
             }
 
-            if($this->playerHandStatus == "BL"){
+            if($this->playerHandStatus == "BL"){                                                // If the player's hand is a Blackjack
 
-                if($this->dealerHandStatus == "BL"){
+                if($this->dealerHandStatus == "BL"){                                            // If the dealer's hand is a Blackjack too
 
-                    $this->gameResult = "Draw";
+                    $this->gameResult = "Draw";                                                 // Update game result as a Draw
                 }
 
-                else{
+                else{                                                                           // If the dealer's hand is either Busted or Stay
 
-                    $this->gameResult = "Player";
+                    $this->gameResult = "Player";                                               // Update game result as Player wins     
                 }
             }
             
             else{                                                                               // Player hand status has to be 'Stay' (Only choice left)
 
-                if($this->dealerHandStatus == "S"){
+                if($this->dealerHandStatus == "S"){                                             // If the dealer's hand is a Stay
 
-                    if($this->dealerHandValue > $this->playerHandValue){
+                    if($this->dealerHandValue > $this->playerHandValue){                        // If the dealer's hand is bigger than the player's hand
 
-                        $this->gameResult = "Dealer";
+                        $this->gameResult = "Dealer";                                           // Update game result as Dealer wins
                     }
 
-                    else{
+                    else{                                                                       // If the dealer's hand is smaller than the player's hand
 
-                        $this->gameResult = "Player";
+                        $this->gameResult = "Player";                                           // Update game result as Player wins
                     }
                 }
 
-                else if($this->dealerHandStatus == "BL"){
+                else if($this->dealerHandStatus == "BL"){                                       // If the dealer's hand is a Blackjack
 
-                    $this->gameResult = "Dealer";
+                    $this->gameResult = "Dealer";                                               // Update game result as Dealer wins
                 }
 
-                else{
+                else{                                                                           // If the dealer's hand is a Busted
 
-                    $this->gameResult = "Player";
+                    $this->gameResult = "Player";                                               // Update game result as Player wins
                 }
             }
 
-            $this->printWinner();
+            $this->printWinner();                                                               // Printing the winner
             return 0;
         }
         
         function playerStay(){                                                                  // A function to mark player as staying and continue with dealer hand
 
-            if($this->playerHandStatus == "IP"){
+            if($this->playerHandStatus == "IP"){                                                // If the player's hand is In Progress
 
-                $this->playerHandStatus = "S";
+                $this->playerHandStatus = "S";                                                  // Setting the player hand status as stay
 
-                $haveAce = false;
-                $sumWithoutAces = 0;
-                $aceIndices = array();                                                                   
+                $haveAce = false;                                                               // A variable to hold whether the hand has ace(s)
+                $sumWithoutAces = 0;                                                            // A variable to hold sum without ace(s)    
+                $aceIndices = array();                                                          // A variable to hold ace indices                                                         
                 
-                for($i = 0; $i < count($this->playerHand); $i++){
+                for($i = 0; $i < count($this->playerHand); $i++){                               // Iterating through the player's hand
 
-                    if(($this->playerHand[$i] % 100) == 1){
+                    if(($this->playerHand[$i] % 100) == 1){                                     // If the particular card is an ace
 
-                        $haveAce = true;
-                        array_push($aceIndices, $i);
-                        continue;
+                        $haveAce = true;                                                        // Marking the hand as having at least one ace
+                        array_push($aceIndices, $i);                                            // Saving the ace index
+                        continue;                                                               // Continue to next cards
                     }
 
-                    $sumWithoutAces += $this->decodeValue($this->playerHand[$i] % 100);
+                    $sumWithoutAces += $this->decodeValue($this->playerHand[$i] % 100);         // If the card is not an ace, add its value to sum without aces
                 }
 
-                if($haveAce == false){
+                if($haveAce == false){                                                          // If the hand has no aces
 
-                    $this->playerHandValue = $sumWithoutAces;
+                    $this->playerHandValue = $sumWithoutAces;                                   // Saving the value of the hand
                 }
 
-                else{
+                else{                                                                           // If the hand has ace(s)
 
-                    $firstCaseVal = 11 + (count($aceIndices) - 1);
-                    $secondCaseVal = count($aceIndices);
+                    $firstCaseVal = 11 + (count($aceIndices) - 1);                              // First case val is first ace being 11, rest being 1
+                    $secondCaseVal = count($aceIndices);                                        // Second case val is all aces being 1
                     $firstCaseSum = $sumWithoutAces + $firstCaseVal;
                     $secondCaseSum = $sumWithoutAces + $secondCaseVal;
 
-                    if(($firstCaseSum > $secondCaseSum) && ($firstCaseSum < 21)){
+                    if($firstCaseSum < 21){                                                     // If the first case val is smaller than 21
 
-                        $this->playerHandValue = $firstCaseSum;
+                        $this->playerHandValue = $firstCaseSum;                                 // Save the hand value as first case val
                     }
 
-                    else{
+                    else{                                                                       // If the first case val is bigger than 21
 
-                        $this->playerHandValue = $secondCaseSum;
+                        $this->playerHandValue = $secondCaseSum;                                // Save the hand value as second case val
                     }
                 }
 
-                $this->contDealerHand();
+                $this->contDealerHand();                                                        // Continue with completing the dealer's hand
             }    
         }
         
         function playerHit(){                                                                   // A function to hit player with a card
 
-            if($this->playerHandStatus == "IP"){
+            if($this->playerHandStatus == "IP"){                                                // If the player's hand is In Progress
                 
-                $takenCard =  $this->takeCard();
-                array_push($this->playerHand, $takenCard);
+                $takenCard =  $this->takeCard();                                                // Taking a card from the all 6 decks
+                array_push($this->playerHand, $takenCard);                                      // Adding this card to the player's hand
 
-                $this->playerHandStatus = $this->playerHandCheck();
+                $this->playerHandStatus = $this->playerHandCheck();                             // Updating the player's hand status
 
-                $this->printHands(0);
+                $this->printHands(0);                                                           // Printing the hands
 
-                if($this->playerHandStatus == "IP"){
+                if($this->playerHandStatus == "IP"){                                            // If the player's new hand status is In Progress
 
-                    return 0;
+                    return 0;                                                                   // Do nothing
                 }
 
-                else if($this->playerHandStatus == "BU"){
+                else if($this->playerHandStatus == "BU"){                                       // If the player's hand status is Busted
 
-                    $this->gameResult = "Dealer";
-                    $this->printWinner();
-                    return 0;
+                    $this->gameResult = "Dealer";                                               // Dealer automatically wins
+                    $this->printWinner();                                                       // Print winner
+                    return 0;                                                                   // Return
                 }
                 
-                $this->contDealerHand();
+                $this->contDealerHand();                                                        // If the player is not busted, continue completing the dealer's hand
             }
 
             else{
@@ -494,7 +494,7 @@
             }    
         }
 
-        function printWinner(){
+        function printWinner(){                                                                 // A print function to print winner
 
             $resultString = "<br><br> THE RESULT (WINNER) IS: " . $this->gameResult . "<br>";
             $winnerHand;
