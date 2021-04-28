@@ -1,7 +1,7 @@
 # Medianova_HT
 Blackjack game made with PHP for the company Medianova.
 
-* Class (gameRunner) Attributes
+* <ins>**Class (gameRunner) Attributes**</ins>
   - **$playerName**: Name of the player (Hardcoded).
   - **$delay**: Delay (seconds) between each round (Hardcoded).
   - **$gameResult**: Game result as a string ("Draw","Player","Dealer").
