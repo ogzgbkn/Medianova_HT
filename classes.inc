@@ -2,10 +2,10 @@
 
     class cardInfo{                                                                             // CardInfo class holds card type and card value
 
-        public $cardNum;
-        public $cardType;
+        public $cardNum;                                                                        // Number of the card (1 to 13)
+        public $cardType;                                                                       // Type of the card (Clubs, Diamonds, Hearts, Spades)
 
-        function __construct(string $newCardType, int $newCardNum){
+        function __construct(string $newCardType, int $newCardNum){                             // A constructor to set the attributes
 
             $this->cardNum = $newCardNum;
             $this->cardType = $newCardType;
@@ -42,15 +42,15 @@
 
             $this->cards = array();                                                             // Creating the array to hold 6 decks
 
-            for($i = 0; $i < 6; $i++){                                                         // At each iteration for 6 iterations
+            for($i = 0; $i < 6; $i++){                                                          // At each iteration for 6 iterations
                 
                 array_push($this->cards, array());                                              // Pushing an empty deck
 
-                for($j = 0; $j < 4; $j++){                                                     // At each iteration for 4 iterations
+                for($j = 0; $j < 4; $j++){                                                      // At each iteration for 4 iterations
 
                     $cardType = ($j+1)*100;                                                     // Defining card type (100: Clubs, 200: Diamonds, 300: Hearts, 400: Spades)
 
-                    for($k = 0; $k < 13; $k++){                                                // At each iteration for 13 iterations 
+                    for($k = 0; $k < 13; $k++){                                                 // At each iteration for 13 iterations 
 
                         array_push(($this->cards)[$i], $cardType + ($k+1));                     // Filling the deck with that specific card type (Ex: 301 is Ace of Hearts)
                     }
@@ -61,11 +61,11 @@
         function decodeCard(int $cardNum){                                                      // A function to decode cardum (Ex: 210) to class cardInfo
 
             $resultInfo = new cardInfo("", 0);
-            $cardTypeInt = (int) ($cardNum/100);
-            $cardVal = $cardNum - $cardTypeInt*100;
+            $cardTypeInt = (int) ($cardNum/100);                                                // Card type is cardNum modulus 100
+            $cardVal = $cardNum - $cardTypeInt*100;                                             // Card value is cardNum minus hundreds part (Ex: 406-400=6)
             $resultInfo->cardNum = $cardVal;
 
-            switch($cardTypeInt){
+            switch($cardTypeInt){                                                               // Determining card type according to hundreds part (Ex: 304 is a card of Hearts)
 
                 case 1:
                     $resultInfo->cardType = "Clubs";
@@ -80,131 +80,131 @@
                     $resultInfo->cardType = "Spades";
             }
 
-            return $resultInfo;
+            return $resultInfo;                                                                 // Returning the decoded info as cardInfo class
         }
         
         function takeCard(){                                                                    // A function to take 1 card from 6 decks
 
-            while(true){
+            while(true){                                                                        // A for loop to choose the deck again if the chosen deck is empty 
 
-                $deckIdx = rand(0,5);
-                $deckCardCount = count(($this->cards)[$deckIdx]);
+                $deckIdx = rand(0,5);                                                           // Randomly choosing the deck
+                $deckCardCount = count(($this->cards)[$deckIdx]);                               // Determining the number of card in that particular deck
 
-                if($deckCardCount == 0){
+                if($deckCardCount == 0){                                                        // If the number of cards is 0 (The deck is empty)
 
-                    continue;
+                    continue;                                                                   // Choose another deck
                 }
             
-                $deckCardIdx = rand(0,$deckCardCount-1);
+                $deckCardIdx = rand(0,$deckCardCount-1);                                        // Randomly choosing a card from the deck
 
-                $removedCard = ($this->cards)[$deckIdx][$deckCardIdx];
-                array_splice(($this->cards)[$deckIdx], $deckCardIdx, 1);
+                $removedCard = ($this->cards)[$deckIdx][$deckCardIdx];                          
+                array_splice(($this->cards)[$deckIdx], $deckCardIdx, 1);                        // Removing the card from the deck
 
-                return $removedCard;
+                return $removedCard;                                                            // Returning the taken card
             }    
         }
 
         function dealerHandCheck(){                                                             // A function to check dealer's current hand and determine its status
 
-            if($this->dealerHandStatus == "IP"){
+            if($this->dealerHandStatus == "IP"){                                                // If the dealer hand is In Progress (<17)
 
-                $haveAce = false;
-                $sumWithoutAces = 0;
-                $aceIndices = array();                                                                   
+                $haveAce = false;                                                               // A variable to hold whether the hand has an ace
+                $sumWithoutAces = 0;                                                            // A variable to hold the sum of the hand without the aces
+                $aceIndices = array();                                                          // An array to hold ace indices if the hand has ace(s)                                                                 
                 
-                for($i = 0; $i < count($this->dealerHand); $i++){
+                for($i = 0; $i < count($this->dealerHand); $i++){                               // Iterating through whole hand
 
-                    if(($this->dealerHand[$i] % 100) == 1){
+                    if(($this->dealerHand[$i] % 100) == 1){                                     // If the particular card is an ace
 
-                        $haveAce = true;
-                        array_push($aceIndices, $i);
-                        continue;
+                        $haveAce = true;                                                        // Mark the hand as having at least one ace
+                        array_push($aceIndices, $i);                                            // Saving the index of the ace
+                        continue;                                                               // Continue to look other cards in the hand
                     }
 
-                    $sumWithoutAces += $this->decodeValue($this->dealerHand[$i] % 100);
+                    $sumWithoutAces += $this->decodeValue($this->dealerHand[$i] % 100);         // If the particular card is not an ace, add the value of the card to sum without aces
                 }
 
                 if($haveAce == false){                                                          // If the deck has no ace, determine hand status using $sumWithoutAces
 
-                    if($sumWithoutAces < 17){
+                    if($sumWithoutAces < 17){                                                   // If the sum without aces is smaller than 17
 
-                        return "IP";
+                        return "IP";                                                            // The hand is still In Progress
                     }
 
-                    else if(($sumWithoutAces >= 17) && ($sumWithoutAces < 21)){
+                    else if(($sumWithoutAces >= 17) && ($sumWithoutAces < 21)){                 // If the sum without aces is bigger than 17 and smaller than 21
 
-                        $this->dealerHandValue = $sumWithoutAces;
-                        return "S";
+                        $this->dealerHandValue = $sumWithoutAces;                               // The hand check is over. Saving the hand value
+                        return "S";                                                             // The hand is a Stay
                     }
 
-                    else if($sumWithoutAces == 21){
+                    else if($sumWithoutAces == 21){                                             // If the sum without aces is 21
 
-                        $this->dealerHandValue = 21;
-                        return "BL";
+                        $this->dealerHandValue = 21;                                            // The hand check is over. Saving the hand value
+                        return "BL";                                                            // The hand is a Blackjack
                     }
 
-                    else{
+                    else{                                                                       // If the sum without aces is bigger than 21
 
-                        $this->dealerHandValue = $sumWithoutAces;
-                        return "BU";
+                        $this->dealerHandValue = $sumWithoutAces;                               // The hand check is over. Saving the hand value
+                        return "BU";                                                            // The hand is a Busted
                     }
                 }
 
-                else{
+                else{                                                                           // If the deck has ace(s)
 
-                    $firstCaseVal = 11 + (count($aceIndices) - 1);
-                    $secondCaseVal = count($aceIndices);
+                    $firstCaseVal = 11 + (count($aceIndices) - 1);                              // First case is one ace being 11, rest being 1
+                    $secondCaseVal = count($aceIndices);                                        // Second case is all aces being 1
                     $firstCaseSum = $sumWithoutAces + $firstCaseVal;
                     $secondCaseSum = $sumWithoutAces + $secondCaseVal;
 
-                    if($firstCaseSum < 17){
+                    if($firstCaseSum < 17){                                                     // If first case is smaller than 17
 
-                        return "IP";
+                        return "IP";                                                            // No need to look at second case. Return In Progress
                     }
 
-                    else if(($firstCaseSum >= 17) && ($firstCaseSum < 21)){
+                    else if(($firstCaseSum >= 17) && ($firstCaseSum < 21)){                     // If first case is bigger than 17 and smaller than 21
 
-                        if($firstCaseSum >= $this->playerHandValue){
+                        if($firstCaseSum >= $this->playerHandValue){                            // If dealer's hand is bigger than or equal to player's hand
 
-                            $this->dealerHandValue = $firstCaseSum;
-                            return "S";
+                            $this->dealerHandValue = $firstCaseSum;                             // Save the hand value
+                            return "S";                                                         // The hand is a Stay
                         }
                         
-                        else{
+                        else{                                                                   // If the dealer hand is smaller
 
-                            return "IP";
+                            return "IP";                                                        // There is no point of staying if the dealer will lose. Thinking of second case of aces and returnin In Progress
                         }
                     }
 
-                    else if($firstCaseSum == 21){
+                    else if($firstCaseSum == 21){                                               // If first case is 21 
 
-                        $this->dealerHandValue = 21;
-                        return "BL";
+                        $this->dealerHandValue = 21;                                            // Save the hand value
+                        return "BL";                                                            // The hand is a Blackjack
                     }
 
-                    else{
+                    else{                                                                       // If the first case is bigger than 21
 
-                        if($secondCaseSum < 17){
+                        if($secondCaseSum < 17){                                                // If the second case is smaller than 17 
 
-                            return "IP";
+                            return "IP";                                                        // The hand is In Progress
                         }
 
-                        else if(($secondCaseSum >= 17) && ($secondCaseSum < 21)){
+                        else if(($secondCaseSum >= 17) && ($secondCaseSum < 21)){               // If the second case is bigger than 17 and smaller than 21 
 
-                            $this->dealerHandValue = $secondCaseSum;
-                            return "S";
+                            $this->dealerHandValue = $secondCaseSum;                            // Saving the hand value
+                            return "S";                                                         // The hand is a Stay
                         }
 
-                        else if($secondCaseSum == 21){
+                        else if($secondCaseSum == 21){                                          // If the second case is 21
 
-                            $this->dealerHandValue = 21;
-                            return "BL";
+                            $this->dealerHandValue = 21;                                        // Saving the hand value
+                            return "BL";                                                        // The hand is a Blackjack
                         }
 
-                        else{
+                        else{                                                                   // If the second case is bigger than 21    
 
-                            $this->dealerHandValue = $secondCaseSum;
-                            return "BU";
+                            $this->dealerHandValue = $secondCaseSum;                            // Saving the hand value
+                            return "BU";                                                        // The hand is a Busted
                         }
                     }
                 }
